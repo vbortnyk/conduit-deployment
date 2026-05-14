@@ -55,7 +55,7 @@ jobs:
               -u "${{ github.repository_owner }}" \
               --password-stdin
 
-            cd projects/conduit-container
+            cd projects/conduit-deployment
             
             TAG=${{ github.sha }} docker compose pull
             TAG=${{ github.sha }} docker compose up -d --force-recreate
