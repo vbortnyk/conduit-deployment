@@ -20,14 +20,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/${{ vars.FRONTEND_SERVICE_NAME }}
-          token: ${{ vars.GH_PAT }}
+          token: ${{ secrets.GH_PAT }}
           path: ${{ vars.FRONTEND_SERVICE_NAME }}
 
       - name: Checkout backend
         uses: actions/checkout@v4
         with: 
           repository: ${{ github.repository_owner }}/${{ vars.BACKEND_SERVICE_NAME }}
-          token: ${{ vars.GH_PAT }}
+          token: ${{ secrets.GH_PAT }}
           path: ${{ vars.BACKEND_SERVICE_NAME }}
 
       - name: Login to GHCR
