@@ -8,7 +8,7 @@ services:
     container_name: conduit-frontend
     image: ghcr.io/${REPOSITORY_OWNER}/conduit-frontend:${TAG}
     depends_on:
-      backend:
+      conduit-backend:
         condition: service_healthy
     restart: unless-stopped
 
@@ -31,7 +31,7 @@ services:
       retries: 3
       start_period: 10s
     depends_on:
-      db:
+      conduit-db:
         condition: service_healthy
     restart: unless-stopped
     environment:
@@ -42,7 +42,7 @@ services:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
 
-  db:
+  conduit-db:
     image: postgres:17-alpine
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
