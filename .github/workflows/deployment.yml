@@ -69,7 +69,7 @@ jobs:
             echo "${{ secrets.GH_PAT }}" | docker login ghcr.io \
               -u "${{ github.repository_owner }}" \
               --password-stdin
-              
+  
             cd projects/conduit-deployment
             
             docker compose pull
