@@ -19,7 +19,7 @@ jobs:
       - name: Checkout frontend
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository_owner }}/${{ vars.FRONTEND_SERCICE_NAME }}
+          repository: ${{ github.repository_owner }}/${{ vars.FRONTEND_SERVICE_NAME }}
           token: ${{ vars.GH_PAT }}
           path: ${{ vars.FRONTEND_SERVICE_NAME }}
 
