@@ -1,5 +1,13 @@
 name: Deploy
-
+env:
+  BACKEND_PORT=${{ vars.BACKEND_PORT }}
+  FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
+  DATABASE_NAME=${{ vars.DATABASE_NAME }}
+  DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }}
+  DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+  ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }}
+  REPOSITORY_OWNER=${{ github.repository_owner }}
+  TAG=${{ github.sha }}
 on:  
   push:
     branches:
@@ -8,6 +16,7 @@ on:
     paths:
       - '.github/workflows/deployment.yml'
       - 'compose.yml'
+  
 
 jobs:
   build-and-push:
@@ -39,15 +48,6 @@ jobs:
 
       - name: Build and push all to GHCR        
         run: |
-          export BACKEND_PORT=${{ vars.BACKEND_PORT }}
-          export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
-          export DATABASE_NAME=${{ vars.DATABASE_NAME }}
-          export DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }}
-          export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
-          export ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }}
-          export REPOSITORY_OWNER=${{ github.repository_owner }}
-          export TAG=${{ github.sha }}
-
           docker compose build
           docker compose push
           
@@ -67,15 +67,6 @@ jobs:
               --password-stdin
 
             cd projects/conduit-deployment
-
-            export BACKEND_PORT=${{ vars.BACKEND_PORT }}
-            export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
-            export DATABASE_NAME=${{ vars.DATABASE_NAME }}
-            export DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }}
-            export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
-            export ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }}
-            export REPOSITORY_OWNER=${{ github.repository_owner }}
-            export TAG=${{ github.sha }}
             
-            TAG=${{ github.sha }} docker compose pull
-            TAG=${{ github.sha }} docker compose up -d --force-recreate
+            docker compose pull
+            docker compose up -d --force-recreate
