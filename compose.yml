@@ -1,7 +1,7 @@
 services: 
   conduit-frontend:
     build:
-      context: .
+      context: ./conduit-frontend
       dockerfile: Dockerfile
     ports:
       - ${FRONTEND_PORT}:80
@@ -14,7 +14,7 @@ services:
 
   conduit-backend:
     build:
-      context: .
+      context: ./conduit-backend
       dockerfile: Dockerfile
     container_name: conduit-backend
     image: ghcr.io/${REPOSITORY_OWNER}/conduit-backend:${TAG}
