@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - ${FRONTEND_PORT}:80
-    container_name: conduit-frontend
+    container_name: ./conduit-frontend
     image: ghcr.io/${REPOSITORY_OWNER}/conduit-frontend:${TAG}
     depends_on:
       conduit-backend:
