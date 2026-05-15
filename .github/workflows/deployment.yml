@@ -17,7 +17,7 @@ env:
   DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
   ALLOWED_HOSTS: ${{ vars.ALLOWED_HOSTS }}
   REPOSITORY_OWNER: ${{ github.repository_owner }}
-  export TAG: ${{ github.sha }}
+  TAG: ${{ github.sha }}
 
 jobs:
   build-and-push:
