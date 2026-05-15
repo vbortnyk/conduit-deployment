@@ -1,9 +1,0 @@
-{
-    "yaml.schemas": {
-        "https://json.schemastore.org/github-workflow.json": [
-            ".github/workflows/*.yml",
-            ".github/workflows/*.yaml"
-        ],
-        "https://raw.githubusercontent.com/typesafegithub/github-actions-typing/refs/heads/schema-latest/github-actions-typing.schema.json": "file:///home/vb/code/conduit-deployment/.github/workflows/deployment.yml"
-    }
-}
