@@ -26,9 +26,10 @@ jobs:
             echo "${{ secrets.GH_PAT }}" | docker login ghcr.io \
               -u "${{ github.repository_owner }}" \
               --password-stdin
-
+            pws
+            ls -a
             cd projects/conduit-deployment
-            
+
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             export TAG=${{ inputs.tag }} 
 
