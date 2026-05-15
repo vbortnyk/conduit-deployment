@@ -71,3 +71,5 @@ jobs:
             
             TAG=${{ github.sha }} docker compose pull
             TAG=${{ github.sha }} docker compose up -d --force-recreate
+
+            
