@@ -26,8 +26,7 @@ jobs:
               -u "${{ github.repository_owner }}" \
               --password-stdin
 
-            cd projects/conduit-deployment
-
+            cd projects
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             export TAG=${{ inputs.tag }} 
 
