@@ -42,7 +42,7 @@ services:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
 
-  db:
+  conduit-db:
     image: postgres:17-alpine
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
