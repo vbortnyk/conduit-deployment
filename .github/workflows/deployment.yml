@@ -9,6 +9,12 @@ on:
       - '.github/workflows/deployment.yml'
       - 'compose.yml'
 
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
+
 env:
   BACKEND_PORT: ${{ vars.BACKEND_PORT }}
   FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
