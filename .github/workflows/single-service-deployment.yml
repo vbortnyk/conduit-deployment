@@ -33,7 +33,7 @@ jobs:
             cd projects/conduit-deployment
 
             export TAG=${{ inputs.tag }} 
-            export PORT=${{ inputs.port }}
+            export FRONTEND_PORT=${{ inputs.port }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
 
             docker compose pull ${{ inputs.service }}
