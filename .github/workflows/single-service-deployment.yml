@@ -12,27 +12,23 @@ on:
         required: true
         type: string
 
-      vps-host: # The host of the VPS to deploy to. !!! In production org-level secrets configured with corresponsing scopes.
+      port: # The port a container to run on. In production org-level secrets are configured with corresponsing scopes.
         required: true
         type: string
 
-      vps-username: # The username to use when connecting to the VPS. In production org-level secrets configured with corresponsing scopes.
+      vps-host: # The host of the VPS to deploy to. !!! In production org-level secrets are configured with corresponsing scopes.
         required: true
         type: string
 
-      vps-ssh-key: # The SSH key to use when connecting to the VPS. In production org-level secrets configured with corresponsing scopes.
+      vps-username: # The username to use when connecting to the VPS. In production org-level secrets are configured with corresponsing scopes.
         required: true
         type: string
 
-      gh-pat: # The GitHub Personal Access Token to use when authenticating to GHCR. In production org-level secrets configured with corresponsing scopes.
-        required: true
+      frontend-service-name: # A servide configured in compiose file. In production org-level secrets configured with corresponsing scopes.
         type: string
 
-      frontend-service-name: # The name of the frontend service, used to determine which service to deploy. In production org-level secrets configured with corresponsing scopes.
-        type: string
-
-      backend-service-name: # The name of the backend service, used to determine which service to deploy. In production org-level secrets configured with corresponsing scopes.
-        type: string     
+      backend-service-name: # A service configured in compose file. In production org-level secrets configured with corresponsing scopes.
+        type: string 
 
 jobs:
   deploy:
@@ -42,10 +38,10 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ inputs.vps-host }}
-          username: ${{ inputs.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          username: ${{ inputs.vps-username }}
+          key: ${{ secrets.vps-ssh-key }}
           script: |
-            echo "${{ inputs.GH_PAT }}" | docker login ghcr.io \
+            echo "${{ secrets.gh-pat }}" | docker login ghcr.io \
               -u "${{ github.repository_owner }}" \
               --password-stdin
 
@@ -54,8 +50,8 @@ jobs:
             export TAG=${{ inputs.tag }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             case "${{ inputs.service }}" in
-              "${{ inputs.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ inputs.FRONTEND_PORT }} ;;
-              "${{ inputs.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ inputs.BACKEND_PORT }}" ;;
+              "${{ inputs.frontend-service-name }}") export FRONTEND_PORT=${{ inputs.port }} ;;
+              "${{ inputs.backend-service-name }}") export BACKEND_PORT="${{ inputs.port }}" ;;
             esac
 
             docker compose pull ${{ inputs.service }}
