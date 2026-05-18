@@ -2,8 +2,7 @@ name: Service deployment
 
 on: 
   workflow_call:
-    inputs:
-       
+    inputs:     
       tag: # The tag of the image to deploy, the git sha is used in this project   
         required: true
         type: string
@@ -12,23 +11,29 @@ on:
         required: true
         type: string
 
-      port: # The port a container to run on. In production org-level secrets are configured with corresponsing scopes.
+      port: # The port a container to run on. In production this is configured centrally and scoped to repositories.
         required: true
         type: string
 
-      vps-host: # The host of the VPS to deploy to. !!! In production org-level secrets are configured with corresponsing scopes.
+      vps-host: # The host of the VPS to deploy to. In production this is configured centrally and scoped to repositories.
         required: true
         type: string
 
-      vps-username: # The username to use when connecting to the VPS. In production org-level secrets are configured with corresponsing scopes.
-        required: true
+      vps-username: # The username to use when connecting to the VPS. In production this is configured centrally and scoped to repositories.
         type: string
 
-      frontend-service-name: # A servide configured in compiose file. In production org-level secrets configured with corresponsing scopes.
+      frontend-service-name: # A servide configured in compiose file. In production this is configured centrally and scoped to repositories.
         type: string
 
-      backend-service-name: # A service configured in compose file. In production org-level secrets configured with corresponsing scopes.
+      backend-service-name: # A service configured in compose file. In production this is configured centrally and scoped to repositories.
         type: string 
+    
+    secrets:
+      VPS_SSH_KEY: # The private SSH key to connect to the VPS. In production this is configured centrally and scoped to repositories.
+          required: true
+     
+      GH_PAT:
+          required: true
 
 jobs:
   deploy:
