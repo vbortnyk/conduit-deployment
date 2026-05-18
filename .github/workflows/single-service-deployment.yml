@@ -1,25 +1,30 @@
 name: Service deployment
 
-# These environmend variables should be configured on an organisation level with corresponding scopes.
-# They are hardcodecd here for testing purposes.
-env:
-  FRONTEND_PORT: 8282
-  BACKEND_PORT: 8000
-  FRONTEND_SERVICE_NAME: conduit-frontend
-  BACKEND_SERVICE_NAME: conduit-backend
-
 on: 
   workflow_call:
     inputs:
-      tag:
+       
+      tag: # The tag of the image to deploy, the git sha is used in this project   
         required: true
         type: string
 
-      service:
+      service: # The service to deploy, either frontend or backend etc.
         required: true
         type: string
 
-      port:
+      vps-host: # The host of the VPS to deploy to. !!! In production org-level secrets configured with corresponsing scopes.
+        required: true
+        type: string
+
+      vps-username: # The username to use when connecting to the VPS. In production org-level secrets configured with corresponsing scopes.
+        required: true
+        type: string
+
+      vps-ssh-key: # The SSH key to use when connecting to the VPS. In production org-level secrets configured with corresponsing scopes.
+        required: true
+        type: string
+
+      gh-pat: # The GitHub Personal Access Token to use when authenticating to GHCR. In production org-level secrets configured with corresponsing scopes.
         required: true
         type: string
 
@@ -30,7 +35,7 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ vars.VPS_HOST }}
+          host: ${{ inputs.vps-host }}
           username: ${{ vars.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
@@ -43,8 +48,8 @@ jobs:
             export TAG=${{ inputs.tag }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             case "${{ inputs.service }}" in
-              "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ env.FRONTEND_PORT }} ;;
-              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ env.BACKEND_PORT }}" ;;
+              "${{ inputs.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ inputs.FRONTEND_PORT }} ;;
+              "${{ inputs.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ inputs.BACKEND_PORT }}" ;;
             esac
 
             docker compose pull ${{ inputs.service }}
