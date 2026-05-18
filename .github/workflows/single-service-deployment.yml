@@ -1,5 +1,9 @@
 name: Service deployment
 
+env:
+  FRONTEND_SERVICE: conduit-frontend
+  BACKEND_SERVICE: conduit-backend
+
 on: 
   workflow_call:
     inputs:
@@ -35,8 +39,8 @@ jobs:
             export TAG=${{ inputs.tag }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             case "${{ inputs.service }}" in
-              frontend) export FRONTEND_PORT="${{ vars.FRONTEND_PORT }}" ;;
-              backend)  export BACKEND_PORT="${{ vars.BACKEND_PORT }}" ;;
+              ${FRONTEND_SERVICE}) export FRONTEND_PORT="${{ vars.FRONTEND_PORT }}" ;;
+              ${BACKEND_SERVICE}) export BACKEND_PORT="${{ vars.BACKEND_PORT }}" ;;
             esac
 
             docker compose pull ${{ inputs.service }}
