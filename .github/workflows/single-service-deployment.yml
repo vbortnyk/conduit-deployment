@@ -54,6 +54,8 @@ jobs:
 
             export TAG=${{ inputs.tag }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
+            export  VPS_SSH_KEY="${{ secrets.vps-ssh-key }}"
+            echo VPS_SSH_KEY
             case "${{ inputs.service }}" in
               "${{ inputs.frontend-service-name }}") export FRONTEND_PORT=${{ inputs.port }} ;;
               "${{ inputs.backend-service-name }}") export BACKEND_PORT="${{ inputs.port }}" ;;
