@@ -29,6 +29,7 @@ jobs:
             cd projects/conduit-deployment
 
             export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
+            echo "FRONTEND_PORT: $FRONTEND_PORT"
             export BACKEND_PORT=${{ vars.BACKEND_PORT }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             export TAG=${{ inputs.tag }} 
