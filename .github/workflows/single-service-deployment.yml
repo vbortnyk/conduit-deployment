@@ -11,6 +11,10 @@ on:
         required: true
         type: string
 
+      port:
+        required: true
+        type: number
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,11 +32,8 @@ jobs:
 
             cd projects/conduit-deployment
 
-            export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
-            echo "FRONTEND_PORT: ${FRONTEND_PORT}"
-            export BACKEND_PORT=${{ vars.BACKEND_PORT }}
-            export REPOSITORY_OWNER=${{ github.repository_owner }}
             export TAG=${{ inputs.tag }} 
+            export PORT=${{ inputs.port }}
 
             docker compose pull ${{ inputs.service }}
             docker compose up -d --no-deps --force-recreate ${{ inputs.service }}
