@@ -15,7 +15,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to VPS
+      - name: Deploy
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ vars.VPS_HOST }}
