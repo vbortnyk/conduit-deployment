@@ -33,7 +33,8 @@ jobs:
             cd projects/conduit-deployment
 
             export TAG=${{ inputs.tag }} 
-            # export PORT=${{ inputs.port }}
+            export PORT=${{ inputs.port }}
+            export REPOSITORY_OWNER=${{ github.repository_owner }}
 
             docker compose pull ${{ inputs.service }}
             docker compose up -d --no-deps --force-recreate ${{ inputs.service }}
