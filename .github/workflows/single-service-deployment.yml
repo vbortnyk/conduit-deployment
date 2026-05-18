@@ -1,6 +1,10 @@
 name: Service deployment
 
+# These environmend variables should be configured on an organisation level with corresponding scopes.
+# They are hardcodecd here for testing purposes.
 env:
+  FRONTEND_PORT: 8282
+  BACKEND_PORT: 8000
   FRONTEND_SERVICE_NAME: conduit-frontend
   BACKEND_SERVICE_NAME: conduit-backend
 
@@ -39,11 +43,9 @@ jobs:
             export TAG=${{ inputs.tag }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             case "${{ inputs.service }}" in
-              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ vars.BACKEND_PORT }}" ;;
-              "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT="${{ vars.FRONTEND_PORT }}" ;;
+              "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ env.FRONTEND_PORT }} ;;
+              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ env.BACKEND_PORT }}" ;;
             esac
-
-
 
             docker compose pull ${{ inputs.service }}
             docker compose up -d --no-deps --force-recreate ${{ inputs.service }}
