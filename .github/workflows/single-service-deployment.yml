@@ -32,9 +32,7 @@ on:
         type: string
 
       backend-service-name: # The name of the backend service, used to determine which service to deploy. In production org-level secrets configured with corresponsing scopes.
-        type: string
-
-      
+        type: string     
 
 jobs:
   deploy:
@@ -47,7 +45,7 @@ jobs:
           username: ${{ inputs.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            echo "${{ secrets.GH_PAT }}" | docker login ghcr.io \
+            echo "${{ inputs.GH_PAT }}" | docker login ghcr.io \
               -u "${{ github.repository_owner }}" \
               --password-stdin
 
