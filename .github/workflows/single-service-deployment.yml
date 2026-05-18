@@ -11,9 +11,9 @@ on:
         required: true
         type: string
 
-      port:
-        required: true
-        type: number
+      # port:
+      #   required: true
+      #   type: number
 
 jobs:
   deploy:
@@ -33,7 +33,7 @@ jobs:
             cd projects/conduit-deployment
 
             export TAG=${{ inputs.tag }} 
-            export PORT=${{ inputs.port }}
+            # export PORT=${{ inputs.port }}
 
             docker compose pull ${{ inputs.service }}
             docker compose up -d --no-deps --force-recreate ${{ inputs.service }}
