@@ -11,9 +11,9 @@ on:
         required: true
         type: string
 
-      # port:
-      #   required: true
-      #   type: number
+      port:
+        required: true
+        type: number
 
 jobs:
   deploy:
