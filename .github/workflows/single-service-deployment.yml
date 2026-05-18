@@ -39,8 +39,8 @@ jobs:
             export TAG=${{ inputs.tag }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             case "${{ inputs.service }}" in
+              ${BACKEND_SERVICE_NAME}) export BACKEND_PORT="${{ vars.BACKEND_PORT }}" ;;
               ${FRONTEND_SERVICE_NAME}) export FRONTEND_PORT="${{ vars.FRONTEND_PORT }}" ;;
-              # ${BACKEND_SERVICE_NAME}) export BACKEND_PORT="${{ vars.BACKEND_PORT }}" ;;
             esac
 
 
