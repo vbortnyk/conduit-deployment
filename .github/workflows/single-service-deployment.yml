@@ -61,8 +61,8 @@ jobs:
             export  VPS_SSH_KEY="${{ secrets.VPS_SSH_KEY }}"
    
             case "${{ inputs.service }}" in
-              "${FRONTEND_SERVICE_NAME}") export FRONTEND_PORT=${{ inputs.port }} ;;
-              "${BACKEND_SERVICE_NAME}") export BACKEND_PORT="${{ inputs.port }}" ;;
+              "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ inputs.port }} ;;
+              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ inputs.port }}" ;;
             esac
 
             docker compose pull ${{ inputs.service }}
