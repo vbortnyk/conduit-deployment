@@ -28,6 +28,14 @@ on:
         required: true
         type: string
 
+      frontend-service-name: # The name of the frontend service, used to determine which service to deploy. In production org-level secrets configured with corresponsing scopes.
+        type: string
+
+      backend-service-name: # The name of the backend service, used to determine which service to deploy. In production org-level secrets configured with corresponsing scopes.
+        type: string
+
+      
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
