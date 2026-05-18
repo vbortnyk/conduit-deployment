@@ -38,10 +38,11 @@ jobs:
 
             export TAG=${{ inputs.tag }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
-            case "${{ inputs.service }}" in
-              ${FRONTEND_SERVICE_NAME}) export FRONTEND_PORT="${{ vars.FRONTEND_PORT }}" ;;
-              ${BACKEND_SERVICE_NAME}) export BACKEND_PORT="${{ vars.BACKEND_PORT }}" ;;
-            esac
+            # case "${{ inputs.service }}" in
+            #   ${FRONTEND_SERVICE_NAME}) export FRONTEND_PORT="${{ vars.FRONTEND_PORT }}" ;;
+            #   ${BACKEND_SERVICE_NAME}) export BACKEND_PORT="${{ vars.BACKEND_PORT }}" ;;
+            # esac
+            export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
 
             docker compose pull ${{ inputs.service }}
             docker compose up -d --no-deps --force-recreate ${{ inputs.service }}
