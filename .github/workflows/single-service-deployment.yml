@@ -7,37 +7,31 @@ env:
 on: 
   workflow_call:
     inputs:     
-      tag: # The tag of the image to deploy, the git sha is used in this project   
+      SERVOCE: # The service to deploy, either frontend or backend etc.
+        required: true
+        type: string
+      
+      TAG: # The tag of the image to deploy, the git sha is used in this project   
         required: true
         type: string
 
-      service: # The service to deploy, either frontend or backend etc.
+      PORT: # The port a container to run on. In production this is configured centrally and scoped to repositories.
         required: true
         type: string
 
-      port: # The port a container to run on. In production this is configured centrally and scoped to repositories.
+      VPS_HOST: # The host of the VPS to deploy to. In production this is configured centrally and scoped to repositories.
         required: true
         type: string
 
-      vps-host: # The host of the VPS to deploy to. In production this is configured centrally and scoped to repositories.
-        required: true
+      VPS_USERNAME: # The username to use when connecting to the VPS. In production this is configured centrally and scoped to repositories.
         type: string
-
-      vps-username: # The username to use when connecting to the VPS. In production this is configured centrally and scoped to repositories.
-        type: string
-
-      # frontend-service-name: # A servide configured in compiose file. In production this is configured centrally and scoped to repositories.
-      #   type: string
-
-      # backend-service-name: # A service configured in compose file. In production this is configured centrally and scoped to repositories.
-      #   type: string 
     
-    secrets:
-      VPS_SSH_KEY: # The private SSH key to connect to the VPS. In production this is configured centrally and scoped to repositories.
-          required: true
+    # secrets:
+    #   VPS_SSH_KEY: # The private SSH key to connect to the VPS. In production this is configured centrally and scoped to repositories.
+    #       required: true
      
-      GH_PAT:
-          required: true
+    #   GIT_TOKEN: # The GitHub token to authenticate with GitHub Container Registry. In production this is configured centrally and scoped to repositories.
+    #       required: true
 
 jobs:
   deploy:
@@ -46,24 +40,24 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ inputs.vps-host }}
-          username: ${{ inputs.vps-username }}
+          host: ${{ inputs.VPS_HOST }}
+          username: ${{ inputs.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            echo "${{ secrets.GH_PAT }}" | docker login ghcr.io \
+            echo "${{ secrets.GIT_TOKEN }}" | docker login ghcr.io \
               -u "${{ github.repository_owner }}" \
               --password-stdin
 
             cd projects/conduit-deployment
 
-            export TAG=${{ inputs.tag }}
+            export TAG=${{ inputs.TAG }}
             export REPOSITORY_OWNER=${{ github.repository_owner }}
             export  VPS_SSH_KEY="${{ secrets.VPS_SSH_KEY }}"
    
-            case "${{ inputs.service }}" in
-              "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ inputs.port }} ;;
-              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ inputs.port }}" ;;
+            case "${{ inputs.SERVICE_NAME }}" in
+              "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ inputs.PORT }} ;;
+              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ inputs.PORT }}" ;;
             esac
 
-            docker compose pull ${{ inputs.service }}
-            docker compose up -d --no-deps --force-recreate ${{ inputs.service }}
+            docker compose pull ${{ inputs.SERVICE_NAME }}
+            docker compose up -d --no-deps --force-recreate ${{ inputs.SERVICE_NAME }}
