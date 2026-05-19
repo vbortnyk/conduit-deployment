@@ -13,7 +13,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-  conduit-backend:
+  backend:
     build:
       context: ./conduit-backend
       dockerfile: Dockerfile
