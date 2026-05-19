@@ -7,7 +7,7 @@ env:
 on: 
   workflow_call:
     inputs:     
-      SERVOCE: # The service to deploy, either frontend or backend etc.
+      SERVICE_NAME: # The service to deploy, either frontend or backend etc.
         required: true
         type: string
       
