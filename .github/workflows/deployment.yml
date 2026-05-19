@@ -19,6 +19,7 @@ env:
   DATABASE_USERNAME: ${{ vars.DATABASE_USERNAME }}
   DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
   ALLOWED_HOSTS: ${{ vars.ALLOWED_HOSTS }}
+  REPOSITORY_OWNER: ${{ github.repository_owner }}
   TAG: ${{ github.sha }}
 
 jobs:
