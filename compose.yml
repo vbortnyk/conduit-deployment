@@ -1,5 +1,5 @@
 services: 
-  frontend:
+  conduit-frontend:
     build:
       context: ./conduit-frontend
       dockerfile: Dockerfile
