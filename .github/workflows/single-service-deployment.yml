@@ -25,13 +25,6 @@ on:
 
       VPS_USERNAME: # The username to use when connecting to the VPS. In production this is configured centrally and scoped to repositories.
         type: string
-    
-    # secrets:
-    #   VPS_SSH_KEY: # The private SSH key to connect to the VPS. In production this is configured centrally and scoped to repositories.
-    #       required: true
-     
-    #   GIT_TOKEN: # The GitHub token to authenticate with GitHub Container Registry. In production this is configured centrally and scoped to repositories.
-    #       required: true
 
 jobs:
   deploy:
