@@ -49,7 +49,7 @@ jobs:
    
             case "${{ inputs.SERVICE_NAME }}" in
               "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ inputs.PORT }} ;;
-              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT="${{ inputs.PORT }}" ;;
+              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT=${{ inputs.PORT }} ;;
             esac
 
             docker compose pull ${{ inputs.SERVICE_NAME }}
