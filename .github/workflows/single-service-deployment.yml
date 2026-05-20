@@ -1,0 +1,56 @@
+name: Service deployment
+
+env:
+  FRONTEND_SERVICE_NAME: conduit-frontend
+  BACKEND_SERVICE_NAME: conduit-backend
+  
+on: 
+  workflow_call:
+    inputs:     
+      SERVICE_NAME: # The service to deploy, either frontend or backend etc.
+        required: true
+        type: string
+      
+      TAG: # The tag of the image to deploy, the git sha is used in this project   
+        required: true
+        type: string
+
+      PORT: # The port a container to run on. In production this is configured centrally and scoped to repositories.
+        required: true
+        type: string
+
+      VPS_HOST: # The host of the VPS to deploy to. In production this is configured centrally and scoped to repositories.
+        required: true
+        type: string
+
+      VPS_USERNAME: # The username to use when connecting to the VPS. In production this is configured centrally and scoped to repositories.
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ inputs.VPS_HOST }}
+          username: ${{ inputs.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "${{ secrets.GIT_TOKEN }}" | docker login ghcr.io \
+              -u "${{ github.repository_owner }}" \
+              --password-stdin
+
+            cd projects/conduit-deployment
+
+            export TAG=${{ inputs.TAG }}
+            export REPOSITORY_OWNER=${{ github.repository_owner }}
+            export  VPS_SSH_KEY="${{ secrets.VPS_SSH_KEY }}"
+   
+            case "${{ inputs.SERVICE_NAME }}" in
+              "${{ env.FRONTEND_SERVICE_NAME }}") export FRONTEND_PORT=${{ inputs.PORT }} ;;
+              "${{ env.BACKEND_SERVICE_NAME }}") export BACKEND_PORT=${{ inputs.PORT }} ;;
+            esac
+
+            docker compose pull ${{ inputs.SERVICE_NAME }}
+            docker compose up -d --no-deps --force-recreate ${{ inputs.SERVICE_NAME }}
