@@ -1,9 +1,9 @@
 name: Service deployment
 
 env:
-  FRONTEND_SERVICE_NAME: frontend
-  BACKEND_SERVICE_NAME: backend
-
+  FRONTEND_SERVICE_NAME: conduit-frontend
+  BACKEND_SERVICE_NAME: conduit-backend
+  
 on: 
   workflow_call:
     inputs:     

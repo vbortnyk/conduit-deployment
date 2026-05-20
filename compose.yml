@@ -1,23 +1,23 @@
 services: 
-  frontend:
+  conduit-frontend:
     build:
       context: ./conduit-frontend
       dockerfile: Dockerfile
     container_name: conduit-frontend
-    image: ghcr.io/${REPOSITORY_OWNER}/frontend:${TAG}
+    image: ghcr.io/${REPOSITORY_OWNER}/conduit-frontend:${TAG}
     ports:
       - ${FRONTEND_PORT}:80
     depends_on:
-      backend:
+      conduit-backend:
         condition: service_healthy
     restart: unless-stopped
 
-  backend:
+  conduit-backend:
     build:
       context: ./conduit-backend
       dockerfile: Dockerfile
     container_name: conduit-backend
-    image: ghcr.io/${REPOSITORY_OWNER}/backend:${TAG}
+    image: ghcr.io/${REPOSITORY_OWNER}/conduit-backend:${TAG}
     expose:
       - "${BACKEND_PORT}"
     healthcheck:
