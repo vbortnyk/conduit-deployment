@@ -12,38 +12,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  load-env:
-    runs-on: ubuntu-latest
-    outputs:
-      backend_port: ${{ steps.env.outputs.backend_port }}
-      frontend_port: ${{ steps.env.outputs.frontend_port }}
-      database_name: ${{ steps.env.outputs.database_name }}
-      database_username: ${{ steps.env.outputs.database_username }}
-      allowed_hosts: ${{ steps.env.outputs.allowed_hosts }}
-      vps_host: ${{ steps.env.outputs.vps_host }}
-      vps_username: ${{ steps.env.outputs.vps_username }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Load .env
-        id: env
-        run: |
-          set -a
-          source .env
-          set +a
-
-          echo "backend_port=$BACKEND_PORT" >> $GITHUB_OUTPUT
-          echo "frontend_port=$FRONTEND_PORT" >> $GITHUB_OUTPUT
-          echo "database_name=$DATABASE_NAME" >> $GITHUB_OUTPUT
-          echo "database_username=$DATABASE_USERNAME" >> $GITHUB_OUTPUT
-          echo "allowed_hosts=$ALLOWED_HOSTS" >> $GITHUB_OUTPUT
-          echo "vps_host=$VPS_HOST" >> $GITHUB_OUTPUT
-          echo "vps_username=$VPS_USERNAME" >> $GITHUB_OUTPUT     
-
   build-and-push:
     runs-on: ubuntu-latest
-    needs: load-env
     steps:
       - name: Checkout orchesrator
         uses: actions/checkout@v4
@@ -70,43 +40,20 @@ jobs:
           password: ${{ secrets.GIT_TOKEN }}
 
       - name: Build and push all to GHCR     
-          
         run: |
-          export GIT_TOKEN="${{ secrets }}"
-          export BACKEND_PORT="${{ needs.load-env.outputs.backend_port }}"
-          export FRONTEND_PORT="${{ needs.load-env.outputs.frontend_port }}"
-          export DATABASE_NAME="${{ needs.load-env.outputs.database_name }}"
-          export DATABASE_USERNAME="${{ needs.load-env.outputs.database_username }}"
-          export DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
-          export ALLOWED_HOSTS="${{ needs.load-env.outputs.allowed_hosts }}"
-          export VPS_HOST="${{ needs.load-env.outputs.vps_host }}"
-          export VPS_USERNAME="${{ needs.load-env.outputs.vps_username }}"  
-
           docker compose build
           docker compose push
           
   deploy:
-    needs: [build-and-push, load-env]
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Deploy
         uses: appleboy/ssh-action@v1.2.0  
         with:
-          host: ${{ needs.load-env.outputs.vps_host }}
-          username: ${{ needs.load-env.outputs.vps_username }}
+          host: ${{ vars.VPS_HOST }}
+          username: ${{ vars.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }} 
-
-          script: |   
-            export GIT_TOKEN="${{ secrets.GIT_TOKEN }}"
-            export BACKEND_PORT="${{ needs.load-env.outputs.backend_port }}"
-            export FRONTEND_PORT="${{ needs.load-env.outputs.frontend_port }}"
-            export DATABASE_NAME="${{ needs.load-env.outputs.database_name }}"
-            export DATABASE_USERNAME="${{ needs.load-env.outputs.database_username }}"
-            export DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
-            export ALLOWED_HOSTS="${{ needs.load-env.outputs.allowed_hosts }}"
-            export VPS_HOST="${{ needs.load-env.outputs.vps_host }}"
-            export VPS_USERNAME="${{ needs.load-env.outputs.vps_username }}"  
-
             echo "${{ secrets.GIT_TOKEN }}" | docker login ghcr.io \
               -u "${{ github.repository_owner }}" \
               --password-stdin
