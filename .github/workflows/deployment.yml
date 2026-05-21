@@ -41,7 +41,7 @@ jobs:
 
       - name: Load .env
         run: |
-           scp -i ssh_key \
+           scp -i ${{ secrets.VPS_SSH_KEY }}  \
              ${{ vars.VPS_USERNAME }}@${{ vars.VPS_HOST }}:~/projects/conduit-deployment/.env \
              .
             
