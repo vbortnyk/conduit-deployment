@@ -41,7 +41,7 @@ jobs:
 
       - name: Load .env
         run: |
-          echo "${{ secrets.GIT_TOKEN }}" > ssh_key
+          echo "${{ secrets.VPS_SSH_KEY }}" > ssh_key
           chmod 600 ssh_key
 
           scp -i ssh_key  \
