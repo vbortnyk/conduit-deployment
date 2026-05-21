@@ -41,10 +41,10 @@ jobs:
 
       - name: Load .env
         run: |
-          echo "${{ secrets.GIT_TOKEN }}" > ssh-key
+          echo "${{ secrets.GIT_TOKEN }}" > ssh_key
           chmod 600 ssh_key
 
-          scp -i ssh-key  \
+          scp -i ssh_key  \
              ${{ vars.VPS_USERNAME }}@${{ vars.VPS_HOST }}:~/projects/conduit-deployment/.env \
              .
             
