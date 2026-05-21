@@ -84,5 +84,7 @@ jobs:
   
             cd projects/conduit-deployment
             
+            export REPOSITORY_OWNER=${{ github.repository_owner }}
+            
             docker compose pull
             docker compose up -d --force-recreate
