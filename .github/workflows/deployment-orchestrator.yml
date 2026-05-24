@@ -61,10 +61,10 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GIT_TOKEN }}
 
-      - name: Build and push to GHCR
-        
+      - name: Build and push to GHCR        
         run: |
-          pwd
+          echo "PWD=$(pwd)"
+          ls -la
           export BACKEND_PORT=${{ vars.BACKEND_PORT }}
           export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
           export DATABASE_NAME=${{ vars.DATABASE_NAME }}
