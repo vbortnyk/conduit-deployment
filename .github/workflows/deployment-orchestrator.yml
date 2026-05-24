@@ -54,6 +54,13 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
           path: conduit-backend
 
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with: 
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}
+
       - name: Build and push to GHCR
         uses: docker/build-push-action@v7
         with:
