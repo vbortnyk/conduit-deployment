@@ -71,8 +71,8 @@ In the cloned git repository navigate to: Settings-> Secrets and Variables -> Ac
 set the following Secrets:
   - `DATABASE_PASSWORD` -> `<your-db-password>`
   - `GIT_SSH_KEY` -> `<your-ssh-key>`
-  - `GIT_TOKEN` -> <your-github-token>
-  - `VPS_SSH_KEY` -> <your-ssh-private-key>
+  - `GIT_TOKEN` -> `<your-github-token>`
+  - `VPS_SSH_KEY` -> `<your-ssh-private-key>`
 
 
 ## First Deployment
