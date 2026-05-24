@@ -1,0 +1,83 @@
+name: Deployment Orchestrator
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag to deploy"
+        required: false
+        type: choice
+        options:
+          - stable
+          - no tag (new build)
+
+jobs:
+  verify-tag:
+
+    outputs: 
+      build_required: ${{ steps.verify.outputs.build_required }}
+      deployment_tag: ${{ steps.verify.outputs.deployment_tag }}
+
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Tags verification
+        id: verify
+        run: |
+          if [[ "${{ github.event.inputs.tag }}" == "no tag (new build)" ]]; then
+            echo "build_required=true" >> $GITHUB_OUTPUT
+            echo "deployment_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+          else
+            echo "build_required=false" >> $GITHUB_OUTPUT
+            echo "deployment_tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          fi
+
+  build-and-push:
+    needs: verify-tag
+    if: needs.verify-tag.outputs.build_required == 'true'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout orchesrator
+        uses: actions/checkout@v4
+
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/conduit-frontend
+          token: ${{ secrets.GIT_TOKEN }}
+          path: conduit-frontend
+
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with: 
+          repository: ${{ github.repository_owner }}/conduit-backend
+          token: ${{ secrets.GIT_TOKEN }}
+          path: conduit-backend
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with: 
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}
+
+      - name: Build and push to GHCR        
+        run: |
+          export BACKEND_PORT=${{ vars.BACKEND_PORT }}
+          export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
+          export DATABASE_NAME=${{ vars.DATABASE_NAME }}
+          export DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }}
+          export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          export ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }}
+          export REPOSITORY_OWNER=${{ github.repository_owner }}
+          export TAG=${{ needs.verify-tag.outputs.deployment_tag }}
+
+          docker compose build
+          docker compose push
+
+  deploy:
+    needs: [verify-tag, build-and-push]
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit
+    with:
+      tag: ${{ needs.verify-tag.outputs.deployment_tag }}
