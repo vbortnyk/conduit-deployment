@@ -1,0 +1,30 @@
+name: Build and Push
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with: 
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}   
+      
+      - name: Build and push to GHCR
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/${{ vars.FRONTEND_SERVICE_NAME }}:${{ github.event.inputs.tag }}

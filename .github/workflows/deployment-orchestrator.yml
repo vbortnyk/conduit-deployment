@@ -1,0 +1,50 @@
+name: Deployment Orchestrator
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag to deploy"
+        required: false
+        type: choice
+        options:
+          - stable
+
+jobs:
+  verify-tag:
+
+    outputs: 
+      build_required: ${{ steps.verify.outputs.build_required }}
+      deployment_tag: ${{ steps.verify.outputs.deployment_tag }}
+
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Tags verification
+        id: verify
+        run: |
+          if [[ -z "${{ github.event.inputs.tag }}" ]]; then
+            echo "build_required=true" >> $GITHUB_OUTPUT
+            echo "deployment_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+          else
+            echo "build_required=false" >> $GITHUB_OUTPUT
+            echo "deployment_tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          fi
+
+  build-and-push:
+    needs: verify-tag
+    if: needs.verify-tag.outputs.build_required == 'true'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build and push to GHCR
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/conduit-deployment:${{ github.sha }}
+
+  deploy:
+    needs: verify-tag
+    uses: ./.github/workflows/deployment.yml
+    with:
+      tag: ${{ needs.verify-tag.outputs.deployment_tag }}
