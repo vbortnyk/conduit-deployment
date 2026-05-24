@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - stable
+          - no tag (new build)
 
 jobs:
   verify-tag:
@@ -22,7 +23,7 @@ jobs:
       - name: Tags verification
         id: verify
         run: |
-          if [[ -z "${{ github.event.inputs.tag }}" ]]; then
+          if [[ "${{ github.event.inputs.tag }}" == "no tag (new build)" ]]; then
             echo "build_required=true" >> $GITHUB_OUTPUT
             echo "deployment_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
           else
