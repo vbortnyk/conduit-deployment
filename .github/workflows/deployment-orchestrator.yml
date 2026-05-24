@@ -63,14 +63,14 @@ jobs:
 
       - name: Build and push to GHCR
         run: |
-          export BACKEND_PORT: ${{ vars.BACKEND_PORT }}
-          export FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
-          export DATABASE_NAME: ${{ vars.DATABASE_NAME }}
-          export DATABASE_USERNAME: ${{ vars.DATABASE_USERNAME }}
-          export DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          export ALLOWED_HOSTS: ${{ vars.ALLOWED_HOSTS }}
-          export REPOSITORY_OWNER: ${{ github.repository_owner }}
-          export TAG: ${{ needs.verify-tag.outputs.deployment_tag }}
+          export BACKEND_PORT=${{ vars.BACKEND_PORT }}
+          export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
+          export DATABASE_NAME=${{ vars.DATABASE_NAME }}
+          export DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }}
+          export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          export ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }}
+          export REPOSITORY_OWNER=${{ github.repository_owner }}
+          export TAG=${{ needs.verify-tag.outputs.deployment_tag }}
 
           docker compose build
           docker compose push
