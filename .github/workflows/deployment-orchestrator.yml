@@ -37,6 +37,23 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout orchesrator
+        uses: actions/checkout@v4
+
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/conduit-frontend
+          token: ${{ secrets.GIT_TOKEN }}
+          path: conduit-frontend
+
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with: 
+          repository: ${{ github.repository_owner }}/conduit-backend
+          token: ${{ secrets.GIT_TOKEN }}
+          path: conduit-backend
+
       - name: Build and push to GHCR
         uses: docker/build-push-action@v7
         with:
@@ -45,7 +62,7 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/conduit-deployment:${{ github.sha }}
 
   deploy:
-    needs: verify-tag
+    needs: [verify-tag, build-and-push]
     uses: ./.github/workflows/deployment.yml
     with:
       tag: ${{ needs.verify-tag.outputs.deployment_tag }}
