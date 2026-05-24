@@ -27,7 +27,7 @@ jobs:
             cd projects/conduit-deployment
             
             export REPOSITORY_OWNER=${{ github.repository_owner }}
-            export TAG=${{ github.event.inputs.tag }}
+            export TAG=${{ inputs.tag }}
 
             docker compose pull
             docker compose up -d --force-recreate
