@@ -63,8 +63,6 @@ jobs:
 
       - name: Build and push to GHCR        
         run: |
-          echo "PWD=$(pwd)"
-          ls -la
           export BACKEND_PORT=${{ vars.BACKEND_PORT }}
           export FRONTEND_PORT=${{ vars.FRONTEND_PORT }}
           export DATABASE_NAME=${{ vars.DATABASE_NAME }}
@@ -80,5 +78,6 @@ jobs:
   deploy:
     needs: [verify-tag, build-and-push]
     uses: ./.github/workflows/deployment.yml
+    secrets: inherit
     with:
       tag: ${{ needs.verify-tag.outputs.deployment_tag }}
