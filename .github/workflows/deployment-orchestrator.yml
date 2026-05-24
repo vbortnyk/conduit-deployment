@@ -62,11 +62,18 @@ jobs:
           password: ${{ secrets.GIT_TOKEN }}
 
       - name: Build and push to GHCR
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/conduit-deployment:${{ github.sha }}
+        run: |
+          export BACKEND_PORT: ${{ vars.BACKEND_PORT }}
+          export FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
+          export DATABASE_NAME: ${{ vars.DATABASE_NAME }}
+          export DATABASE_USERNAME: ${{ vars.DATABASE_USERNAME }}
+          export DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          export ALLOWED_HOSTS: ${{ vars.ALLOWED_HOSTS }}
+          export REPOSITORY_OWNER: ${{ github.repository_owner }}
+          export TAG: ${{ needs.verify-tag.outputs.deployment_tag }}
+
+          docker compose build
+          docker compose push
 
   deploy:
     needs: [verify-tag, build-and-push]
