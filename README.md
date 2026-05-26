@@ -34,11 +34,17 @@ The orchestrator repository is responsible for:
 
 Before running this project, make sure you have the following installed:
 
-- Docker
-- Docker Compose
-- Node.js (for Angular development, optional if using Docker only)
-- Python 3.10+ (for backend development, optional if using Docker only)
-- Git
+- A GitHub account
+- A remote server with SSH access
+- Docker installed on the remote server
+- A frontend repository located at: `<owner>/conduit-frontend`. Can be cloned:
+  ```bash
+     $ git clone git@github.com:vbortnyk/conduit-frontend.git
+  ```
+- A backend repository located at: `<owner>/conduit-backend`. Can be cloned:
+  ```bash
+     $ git clone https://github.com/vbortnyk/conduit-backend
+  ```
 
 ## Quick Start
 
@@ -78,7 +84,7 @@ set the following Secrets:
 ## First Deployment
 First full-system build and deployment
 
-  - Make sure the workflow file is on the default branch:
+  - Make sure the workflow file is on the default branch. In your GitHub repository:
     - navigate to: Settings -> Default branch -> set the current branch as Default
   - Navigate to Actions tab
   - In the left sidebar under "All workflows" select `Deploy`
