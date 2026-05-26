@@ -52,7 +52,10 @@ Before running this project, make sure you have the following installed:
    ```bash
       $ git clone git@github.com:vbortnyk/conduit-deployment.git
    ```
-   Configuration details for each service can be found here:
+The repository contains a `compose.yml` file with Docker build and deployment instructions. Copy this file to your VPS under the following path:`~/projects/conduit-deployment`
+
+
+Configuration details for each service can be found here:
 - [Angular app README](https://github.com/vbortnyk/conduit-frontend/blob/master/README.md)
 - [Django app README](https://github.com/vbortnyk/conduit-backend/blob/master/README.md)
 
@@ -79,6 +82,9 @@ set the following Secrets:
   - `GIT_SSH_KEY` -> `<your-ssh-key>`
   - `GIT_TOKEN` -> `<your-github-token>`
   - `VPS_SSH_KEY` -> `<your-ssh-private-key>`
+
+
+
 
 
 ## First Deployment
