@@ -72,6 +72,11 @@ jobs:
             echo "${{ secrets.GIT_TOKEN }}" | docker login ghcr.io \
               -u "${{ github.repository_owner }}" \
               --password-stdin
+
+            if [ ! -d "projects/conduit-deployment" ]; then
+              echo "ERROR: deployment path 'projects/conduit-deployment' does not exist."
+              exit 1
+            fi
   
             cd projects/conduit-deployment
             
